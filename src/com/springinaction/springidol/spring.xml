@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- Bean declarations go here -->
+
+	<bean id="duke" class="com.springinaction.springidol.performer.Juggler">
+		<constructor-arg value="15" />
+	</bean>
+
+	<bean id="sonnet29" class="com.springinaction.springidol.performer.Sonnet29">
+	</bean>
+
+	<bean id="poeticDuke" class="com.springinaction.springidol.performer.PoeticJuggler">
+		<constructor-arg value="15" />
+		<constructor-arg ref="sonnet29" />
+	</bean>
+
+	<bean id="theStage" class="com.springinaction.springidol.performer.Stage"
+		factory-method="getInstance" />
+
+	<bean id="kenny" class="com.springinaction.springidol.performer.Instrumentalist"
+		p:song="Jingle bells" p:instrument-ref="saxophone" />
+	<bean id="hank" class="com.springinaction.springidol.performer.OneManBand">
+		<property name="instruments">
+			<list>
+				<ref bean="saxophone" />
+				<ref bean="piano" />
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="saxophone" class="com.springinaction.springidol.instrument.Saxophone" />
+	<bean id="piano" class="com.springinaction.springidol.instrument.Piano" />
+</beans>
+
+
+
+
