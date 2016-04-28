@@ -16,6 +16,13 @@
  *
  */
 package com.springinaction.springidol.inter;
+/**
+ * @className:com.springinaction.springidol.inter.Performer
+ * @description:TODO
+ * @version:v1.0.0 
+ * @date:2016-4-28 下午4:36:17
+ * @author:WangHao
+ */
 public interface Performer
 {
 	void perform();

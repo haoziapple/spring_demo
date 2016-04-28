@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+	default-autowire="byName">
+
+	<!-- 告诉Spring我们打算使用基于注解的自动装配 -->
+	<context:annotation-config />
+	<!-- 开启自动检测Bean -->
+	<context:component-scan base-package="com/springinaction/springidol" />
 	<!-- Bean declarations go here -->
 
 	<bean id="duke" class="com.springinaction.springidol.performer.Juggler">
@@ -17,11 +29,14 @@
 		<constructor-arg ref="sonnet29" />
 	</bean>
 
+	<!-- 使用工厂方法创建单例bean -->
 	<bean id="theStage" class="com.springinaction.springidol.performer.Stage"
 		factory-method="getInstance" />
 
+	<!-- 使用简化的bean属性配置 -->
 	<bean id="kenny" class="com.springinaction.springidol.performer.Instrumentalist"
-		p:song="Jingle bells" p:instrument-ref="saxophone" />
+		p:song="Jingle bells" />
+
 	<bean id="hank" class="com.springinaction.springidol.performer.OneManBand">
 		<property name="instruments">
 			<list>
@@ -31,9 +46,79 @@
 		</property>
 	</bean>
 
+	<!-- 使用SpEL表达式 -->
+	<bean id="carl" class="com.springinaction.springidol.performer.Instrumentalist">
+		<property name="song" value="#{kenny.song}" />
+	</bean>
 
+	<!-- 乐器bean -->
 	<bean id="saxophone" class="com.springinaction.springidol.instrument.Saxophone" />
 	<bean id="piano" class="com.springinaction.springidol.instrument.Piano" />
+	<!-- 用于byName的自动装配 -->
+	<bean id="instrument" class="com.springinaction.springidol.instrument.Piano" />
+
+	<!-- 使用AOP -->
+	<bean id="audience" class="com.springinaction.springidol.audience.Audience" />
+	<bean id="magician" class="com.springinaction.springidol.performer.Magician" />
+	<bean id="haozi" class="com.springinaction.springidol.performer.Volunteer" />
+
+	<!-- 切点定义复杂方式 -->
+	<!-- <aop:config> -->
+	<!-- <aop:aspect ref="audience"> -->
+	<!-- <aop:before -->
+	<!-- pointcut="execution(* com.springinaction.springidol.inter.Performer.perform(..))" -->
+	<!-- method="takeSeats" /> -->
+	<!-- <aop:before -->
+	<!-- pointcut="execution(* com.springinaction.springidol.inter.Performer.perform(..))" -->
+	<!-- method="turnOffCellPhones" /> -->
+	<!-- <aop:after-returning -->
+	<!-- pointcut="execution(* com.springinaction.springidol.inter.Performer.perform(..))" -->
+	<!-- method="applaud"/> -->
+	<!-- <aop:after-throwing -->
+	<!-- pointcut="execution(* com.springinaction.springidol.inter.Performer.perform(..))" -->
+	<!-- method="demandRefund"/> -->
+	<!-- </aop:aspect> -->
+	<!-- </aop:config> -->
+
+	<!-- 定义命名切点 -->
+	<!-- 坑：aop创建的代理是基于接口的，将造成Spel无法获取类属性 -->
+	<!-- proxy-target-class创建基于类的动态代码 -->
+	<aop:config proxy-target-class="true">
+		<aop:aspect ref="audience">
+			<aop:pointcut
+				expression="execution(* com.springinaction.springidol.inter.Performer.perform(..))"
+				id="performance" />
+
+			<aop:pointcut
+				expression="execution(* com.springinaction.springidol.inter.Performer.perform(..))"
+				id="performance2" />
+
+
+			<aop:before method="takeSeats" pointcut-ref="performance" />
+			<aop:before method="turnOffCellPhones" pointcut-ref="performance" />
+			<aop:after-returning method="applaud"
+				pointcut-ref="performance" />
+			<aop:after-throwing method="demandRefund"
+				pointcut-ref="performance" />
+
+			<!-- 声明环绕通知 -->
+			<aop:around method="watchPerformance" pointcut-ref="performance2" />
+		</aop:aspect>
+
+		<aop:aspect ref="magician">
+			<aop:pointcut id="thinking"
+				expression="execution(* com.springinaction.springidol.inter.Thinker.thinkOfSomething(String)) and args(thoughts)" />
+
+			<aop:before method="interceptThoughts" arg-names="thoughts"
+				pointcut-ref="thinking" />
+		</aop:aspect>
+
+		<aop:aspect>
+			<aop:declare-parents types-matching="com.springinaction.springidol.inter.Performer+"
+				implement-interface="com.springinaction.springidol.inter.Contestant"
+				default-impl="com.springinaction.springidol.performer.GraciousContestant" />
+		</aop:aspect>
+	</aop:config>
 </beans>
 
 

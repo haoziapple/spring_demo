@@ -17,9 +17,11 @@
  */
 package com.springinaction.springidol.performer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.springinaction.springidol.inter.Contestant;
 import com.springinaction.springidol.inter.Instrument;
 import com.springinaction.springidol.inter.Performer;
 
@@ -49,6 +51,7 @@ public class Instrumentalist implements Performer
 		return song;
 	}
 
+	@Autowired
 	private Instrument instrument;
 
 	public String getSong()
@@ -61,20 +64,15 @@ public class Instrumentalist implements Performer
 		this.song = song;
 	}
 
-	public Instrument getInstrument()
-	{
-		return instrument;
-	}
-
-	public void setInstrument(Instrument instrument)
-	{
-		this.instrument = instrument;
-	}
-
 	public static void main(String args[])
 	{
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("com/springinaction/springidol/spring.xml");
-		Performer performer = (Performer) ctx.getBean("kenny");
+		Performer performer = (Performer) ctx.getBean("carl");
 		performer.perform();
+		
+		
+		//通过切面引入新功能
+		Contestant contestant = (Contestant) ctx.getBean("carl");
+		contestant.receiverAward();
 	}
 }
