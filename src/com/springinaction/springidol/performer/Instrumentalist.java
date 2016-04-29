@@ -25,6 +25,13 @@ import com.springinaction.springidol.inter.Contestant;
 import com.springinaction.springidol.inter.Instrument;
 import com.springinaction.springidol.inter.Performer;
 
+/**
+ * @className:com.springinaction.springidol.performer.Instrumentalist
+ * @description:TODO
+ * @version:v1.0.0 
+ * @date:2016-4-29 上午10:33:00
+ * @author:WangHao
+ */
 public class Instrumentalist implements Performer
 {
 	public Instrumentalist()
@@ -68,11 +75,11 @@ public class Instrumentalist implements Performer
 	{
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("com/springinaction/springidol/spring.xml");
 		Performer performer = (Performer) ctx.getBean("carl");
-		performer.perform();
+//		performer.perform();
 		
 		
 		//通过切面引入新功能
-		Contestant contestant = (Contestant) ctx.getBean("carl");
+		Contestant contestant = (Contestant) performer;
 		contestant.receiverAward();
 	}
 }

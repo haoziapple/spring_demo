@@ -17,6 +17,10 @@
  */
 package com.springinaction.springidol.performer;
 
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+
 import com.springinaction.springidol.inter.MindReader;
 
 /**
@@ -26,15 +30,26 @@ import com.springinaction.springidol.inter.MindReader;
  * @date:2016-4-28 下午6:19:15
  * @author:WangHao
  */
+@Aspect
 public class Magician implements MindReader
 {
 	private String thoughts;
+	
+	//声明参数化的切点
+	@Pointcut("execution(* com.springinaction.springidol.inter.Thinker."
+			+ "thinkOfSomething(String)) && args(thoughts)")
+	public void thinking(String thoughts)
+	{
 
+	}
+
+	//把参数传递给通知
+	@Before("thinking(thoughts)")
 	@Override
 	public void interceptThoughts(String thoughts)
 	{
 		System.out.println("Intercepting volunteer's thoughts");
-		this.thoughts=thoughts;
+		this.thoughts = thoughts;
 	}
 
 	@Override

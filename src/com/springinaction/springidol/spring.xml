@@ -81,44 +81,57 @@
 	<!-- </aop:config> -->
 
 	<!-- 定义命名切点 -->
+
+	<!-- 在上下文中创建一个AnnotationAwareAspectJAutoProxyCreator类 -->
+	<!-- 它会自动代理一些Bean，这些Bean的方法需要与使用@Aspect注解的Bean中所定义的切点相匹配，而这些切点又是使用@Pointcut注解定义出来的 -->
+	<aop:aspectj-autoproxy />
+
 	<!-- 坑：aop创建的代理是基于接口的，将造成Spel无法获取类属性 -->
 	<!-- proxy-target-class创建基于类的动态代码 -->
 	<aop:config proxy-target-class="true">
-		<aop:aspect ref="audience">
-			<aop:pointcut
-				expression="execution(* com.springinaction.springidol.inter.Performer.perform(..))"
-				id="performance" />
+		<!-- <aop:aspect ref="audience"> -->
+		<!-- <aop:pointcut -->
+		<!-- expression="execution(* com.springinaction.springidol.inter.Performer.perform(..))" -->
+		<!-- id="performance" /> -->
 
-			<aop:pointcut
-				expression="execution(* com.springinaction.springidol.inter.Performer.perform(..))"
-				id="performance2" />
+		<!-- <aop:pointcut -->
+		<!-- expression="execution(* com.springinaction.springidol.inter.Performer.perform(..))" -->
+		<!-- id="performance2" /> -->
 
 
-			<aop:before method="takeSeats" pointcut-ref="performance" />
-			<aop:before method="turnOffCellPhones" pointcut-ref="performance" />
-			<aop:after-returning method="applaud"
-				pointcut-ref="performance" />
-			<aop:after-throwing method="demandRefund"
-				pointcut-ref="performance" />
+		<!-- <aop:before method="takeSeats" pointcut-ref="performance" /> -->
+		<!-- <aop:before method="turnOffCellPhones" pointcut-ref="performance" 
+			/> -->
+		<!-- <aop:after-returning method="applaud" -->
+		<!-- pointcut-ref="performance" /> -->
+		<!-- <aop:after-throwing method="demandRefund" -->
+		<!-- pointcut-ref="performance" /> -->
 
-			<!-- 声明环绕通知 -->
-			<aop:around method="watchPerformance" pointcut-ref="performance2" />
-		</aop:aspect>
+		<!-- 声明环绕通知 -->
+		<!-- <aop:around method="watchPerformance" pointcut-ref="performance2" 
+			/> -->
+		<!-- </aop:aspect> -->
 
-		<aop:aspect ref="magician">
-			<aop:pointcut id="thinking"
-				expression="execution(* com.springinaction.springidol.inter.Thinker.thinkOfSomething(String)) and args(thoughts)" />
 
-			<aop:before method="interceptThoughts" arg-names="thoughts"
-				pointcut-ref="thinking" />
-		</aop:aspect>
+		<!-- 参数化的aop -->
+<!-- 		<aop:aspect ref="magician"> -->
+<!-- 			<aop:pointcut id="thinking" -->
+<!-- 				expression="execution(* com.springinaction.springidol.inter.Thinker.thinkOfSomething(String)) and args(thoughts)" /> -->
 
-		<aop:aspect>
-			<aop:declare-parents types-matching="com.springinaction.springidol.inter.Performer+"
-				implement-interface="com.springinaction.springidol.inter.Contestant"
-				default-impl="com.springinaction.springidol.performer.GraciousContestant" />
-		</aop:aspect>
+<!-- 			<aop:before method="interceptThoughts" arg-names="thoughts" -->
+<!-- 				pointcut-ref="thinking" /> -->
+<!-- 		</aop:aspect> -->
+
+		<!-- 使用aop为已有的bean引入接口-->
+<!-- 		<aop:aspect> -->
+<!-- 			<aop:declare-parents types-matching="com.springinaction.springidol.inter.Performer+" -->
+<!-- 				implement-interface="com.springinaction.springidol.inter.Contestant" -->
+<!-- 				default-impl="com.springinaction.springidol.performer.GraciousContestant" /> -->
+<!-- 		</aop:aspect> -->
 	</aop:config>
+	<!-- 使用注解AspectJ为已有的bean引入接口 -->
+	<!-- 类型cast报错，待查 -->
+		<bean class="com.springinaction.springidol.performer.ContestantIntroducer" />
 </beans>
 
 

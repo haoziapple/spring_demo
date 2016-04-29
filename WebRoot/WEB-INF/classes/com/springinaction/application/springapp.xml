@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/jee 
+	http://www.springframework.org/schema/jee/spring-jee-4.0.xsd"
+	default-autowire="byName">
+
+	<!-- 告诉Spring我们打算使用基于注解的自动装配 -->
+	<context:annotation-config />
+	<!-- 开启自动检测Bean -->
+	<context:component-scan base-package="com/springinaction" />
+	<!-- Bean declarations go here -->
+	<!-- 配置一个BasicDataSource -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:hsql://localhost/spitter/spitter" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+		<property name="initialSize" value="5" />
+		<property name="maxActive" value="10" />
+		<!-- initialSize 池启动时创建的连接数量 -->
+		<!-- maxActive 同一时间从池中分配的最多连接数。0为无限制 -->
+		<!-- maxIdle 池里不会被释放的最多空闲连接数。0为无限制 -->
+		<!-- maxOpenPreparedStatements 同一时间能够从语句池分配的预处理语句的最大数量。0为无限制 -->
+		<!-- maxWait 在抛出异常前，池等待连接回收的最大时间（没有可用连接时）。-1表示无限等待 -->
+		<!-- minIdle 不创建新连接的情况下，池中保持空闲的最小连接数 -->
+		<!-- poolPreparedStatements 是否对预处理语句进行管理（布尔值） -->
+	</bean>
+
+
+	<!-- 使用JNDI数据源 -->
+	<jee:jndi-lookup id="dataSource" jndi-name="/jdbc/SpitterDS"
+		resource-ref="true" />
+
+	<!-- 使用SimpleJdbcTemplate访问数据 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+	<!-- 装配DAO的jdbcTemplate属性 -->
+	<bean id="spitterDAO" class="com.habuma.spitter.persistence.SimpleJdbcTemplateSpitterDAO">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />	
+	</bean>
+</beans>
+
+
+
+
