@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/task 
+	http://www.springframework.org/schema/task/spring-task-3.2.xsd"
+	default-autowire="byName">
+
+	<!-- 告诉Spring我们打算使用基于注解的自动装配 -->
+	<context:annotation-config />
+	<!-- 开启自动检测Bean -->
+	<context:component-scan base-package="com/springinaction" />
 	<!-- Bean declarations go here -->
-	
+
+	<!-- 识别@Scheduled注解 -->
+	<!-- <task:annotation-driven scheduler="Scheduler" -->
+	<!-- mode="proxy" /> -->
+	<!-- <task:scheduler id="Scheduler" pool-size="10" /> -->
+
+	<!-- 配置文件不会覆盖注解中的配置 -->
+	<bean name="taskJob" class="com.springinaction.schedule.MyFirstSpringJob"></bean>
+	<task:scheduled-tasks>
+		<!-- 0/5表示开始为0秒，后每5秒触发一次 -->
+		<task:scheduled ref="taskJob" method="run" cron="0/5 * * * * ?" />
+		<task:scheduled ref="taskJob" method="doJob1"
+			fixed-rate="10000" />
+		<task:scheduled ref="taskJob" method="doJob2"
+			fixed-delay="10000" />
+	</task:scheduled-tasks>
+
 </beans>
 
