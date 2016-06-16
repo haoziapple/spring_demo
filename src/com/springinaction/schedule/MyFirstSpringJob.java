@@ -34,6 +34,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyFirstSpringJob
 {
+	/**
+	 * 注意！！！
+	 * 
+	 * @Description:注解配置会被spring-xml配置文件覆盖掉
+	 * @version:v1.0
+	 * @author:WangHao
+	 * @date:2016-6-16 下午12:14:17
+	 */
 	// 秒为1时触发
 	@Scheduled(cron = "1 * * * * ?")
 	public void run()
@@ -61,6 +69,7 @@ public class MyFirstSpringJob
 
 		MyFirstSpringJob job = (MyFirstSpringJob) ctx.getBean("myFirstSpringJob");
 
+		// 显式调用run方法
 		job.run();
 	}
 }
