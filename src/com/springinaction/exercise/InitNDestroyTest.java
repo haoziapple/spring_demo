@@ -23,7 +23,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * @className:com.springinaction.exercise.InitNDestroyTest
  * @description:测试spring中bean的init和destroy方法
- * @version:v1.0.0 
+ * @version:v1.0.0
  * @date:2016-5-4 上午10:52:19
  * @author:WangHao
  */
@@ -53,7 +53,7 @@ public class InitNDestroyTest
 	}
 
 	// 测试代码
-	public  static void main(String[] args)
+	public static void main(String[] args)
 	{
 		AbstractApplicationContext context = new ClassPathXmlApplicationContext(
 				"com/springinaction/exercise/spring-exercise.xml");
@@ -67,6 +67,6 @@ public class InitNDestroyTest
 
 		System.out.println(person.getMessage());
 		System.out.println(person_new.getMessage());
-		
+
 	}
 }

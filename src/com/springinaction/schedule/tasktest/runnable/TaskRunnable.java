@@ -19,6 +19,13 @@ package com.springinaction.schedule.tasktest.runnable;
 
 import java.util.Date;
 
+/**
+ * @className:com.springinaction.schedule.tasktest.runnable.TaskRunnable
+ * @description:实际执行任务线程
+ * @version:v1.0.0
+ * @date:2016-6-17 上午10:08:41
+ * @author:WangHao
+ */
 public class TaskRunnable implements Runnable
 {
 	// 执行任务等待时间
@@ -41,8 +48,8 @@ public class TaskRunnable implements Runnable
 			{
 			}
 
-			System.out.println(new Date() + "----------------TaskRunnable id: " + Thread.currentThread().getId()
-					+ " has run");
+			System.out.println(new Date() + "实际执行任务线程----------------TaskRunnable id: "
+					+ Thread.currentThread().getId() + " has run");
 		}
 	}
 }

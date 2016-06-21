@@ -33,6 +33,9 @@ public class TaskTest
 	public static void main(String[] args)
 	{
 		// 加载spring配置文件
+		// 模仿短信发送与信息推送业务逻辑
+		// 一个定时任务不断扫描数据库，并把待发送的信息输入队列
+		// 一个线程不断循环读出队列中信息，执行发送任务
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(
 				"com/springinaction/schedule/tasktest/spring-tasktest.xml");
 	}

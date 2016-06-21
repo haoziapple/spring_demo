@@ -22,30 +22,6 @@
 
 	<!-- Bean declarations go here -->
 
-	<!-- 配置Quartz定时任务 -->
-	<!-- TODO:Quartz不能正常使用 -->
-
-	<!-- Scheduler配置 -->
-	<!-- <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
-	<!-- <property name="triggers" ref="testTrigger" /> -->
-	<!-- <property name="autoStartup" value="true" /> -->
-	<!-- </bean> -->
-
-	<!-- Trigger配置 -->
-	<!-- <bean id="testTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> -->
-	<!-- <property name="jobDetail" ref="testJobDetail" /> -->
-	<!-- <property name="cronExpression" value="*/1 * * * * ?" />每隔1秒钟触发一次 -->
-	<!-- </bean> -->
-
-	<!-- JobDetail配置 -->
-	<!-- concurrent 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
-	<!-- <bean id="testJobDetail" -->
-	<!-- class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> -->
-	<!-- <property name="targetObject" ref="taskJob" /> -->
-	<!-- <property name="targetMethod" value="run" /> -->
-	<!-- <property name="concurrent" value="false" /> -->
-	<!-- </bean> -->
-
 	<!-- 具体的任务bean -->
 	<bean name="taskJob" class="com.springinaction.schedule.MyFirstSpringJob"></bean>
 

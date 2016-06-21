@@ -23,7 +23,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
  * @className:com.springinaction.schedule.tasktest.runnable.QueueRunnable
- * @description:运行具体的执行任务
+ * @description:任务主线程，以单线程方式不断运行，并掉起实际执行任务的线程
  * @version:v1.0.0
  * @date:2016-6-16 下午2:23:54
  * @author:WangHao
@@ -51,7 +51,7 @@ public class QueueRunnable implements Runnable
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println(new Date() + "------------------QueueRunnable is running");
+			System.out.println(new Date() + "任务主线程------------------QueueRunnable is running");
 
 			// 设置执行任务等待时间 10s
 			long waitTime = 10000;
