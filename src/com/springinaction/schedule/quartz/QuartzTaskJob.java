@@ -36,26 +36,12 @@ public class QuartzTaskJob
 		System.out.println(new Date() + "My scheduled job is running");
 	}
 
-	// 固定每十秒触发一次
-	public void doJob1()
-	{
-		System.out.println(new Date() + "-----------------doJob1");
-	}
-
-	// 上次任务结束后十秒后再次执行
-	public void doJob2()
-	{
-		System.out.println(new Date() + "-----------------doJob2");
-	}
-
+	@SuppressWarnings("unused")
 	public static void main(String[] args)
 	{
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(
 				"com/springinaction/schedule/quartz/spring-quartz.xml");
 
 		QuartzTaskJob job = (QuartzTaskJob) ctx.getBean("taskJob");
-
-		// 显式调用run方法
-		job.run();
 	}
 }

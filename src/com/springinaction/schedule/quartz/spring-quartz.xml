@@ -23,12 +23,13 @@
 	<!-- Bean declarations go here -->
 
 	<!-- 配置Quartz定时任务 -->
-	<!-- TODO:Quartz不能正常使用 -->
 
 	<!-- Scheduler配置 -->
+	<!-- startupDelay 延时启动，应用启动后 QuartzScheduler 再启动 , 单位秒 -->
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers" ref="testTrigger" />
 		<property name="autoStartup" value="true" />
+		<property name="startupDelay" value="10" />
 	</bean>
 
 	<!-- Trigger配置 -->
@@ -36,7 +37,10 @@
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="testJobDetail" />
 		<!-- 每隔1秒钟触发一次 -->
-		<property name="cronExpression" value="*/1 * * * * ?" />
+		<!-- <property name="cronExpression" value="*/1 * * * * ?" /> -->
+
+		<!-- 在某个时间点启动 -->
+		<property name="cronExpression" value="32/1 54 15 * * ?" />
 	</bean>
 
 	<!-- JobDetail配置,声明Quartz的job -->
