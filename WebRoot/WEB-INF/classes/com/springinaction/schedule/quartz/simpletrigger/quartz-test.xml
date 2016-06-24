@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/jee 
+	http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+	http://www.springframework.org/schema/task 
+	http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+
+	<!-- 告诉Spring我们打算使用基于注解的自动装配 -->
+	<context:annotation-config />
+	<!-- 开启自动检测Bean -->
+	<context:component-scan base-package="com/springinaction" />
+
+	<!-- Bean declarations go here -->
+
+	<!-- 配置Quartz定时任务 -->
+	<!-- TODO:Quartz不能正常使用 -->
+
+	<!-- Scheduler配置 -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers" ref="simpleTrigger" />
+		<property name="autoStartup" value="true" />
+	</bean>
+
+	<!-- Trigger配置,两种方式 -->
+	<!-- CronTrigger，这种方式类似于linux的crontab的语法 ,run every 1 seconds -->
+	<bean id="testTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="testJobDetail" />
+		<!-- 每隔1秒钟触发一次 -->
+		<property name="cronExpression" value="*/1 * * * * ?" />
+	</bean>
+
+	<!-- Simple Trigger, run every 5 seconds -->
+	<bean id="simpleTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="runMeJob" />
+		<property name="repeatInterval" value="5000" />
+		<property name="startDelay" value="1000" />
+	</bean>
+
+	<!-- JobDetail配置,声明Quartz的job -->
+	<!--还有种方式是继承QuartzJobBean -->
+	<!-- concurrent 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+	<bean id="testJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="runMeTask" />
+		<property name="targetMethod" value="printMe" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!-- 继承QuartzJobBean的方式 -->
+	<bean name="runMeJob"
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.springinaction.schedule.quartz.quartzjobbean.RunMeJob" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="runMeTask" value-ref="runMeTask" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- 具体的任务bean -->
+	<bean name="runMeTask"
+		class="com.springinaction.schedule.quartz.quartzjobbean.RunMeTask"></bean>
+
+</beans>
+
+
+
+

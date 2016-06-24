@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/jee 
+	http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+	http://www.springframework.org/schema/task 
+	http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+	<!-- 告诉Spring我们打算使用基于注解的自动装配 -->
+	<context:annotation-config />
+	<!-- 开启自动检测Bean -->
+	<context:component-scan base-package="com/springinaction" />
+
+	<!-- 模仿短信发送与信息推送业务逻辑 -->
+
+	<!-- 处理具体任务的线程池 -->
+	<bean id="tptExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- 核心线程数 -->
+		<property name="corePoolSize" value="30" />
+		<!-- 最大线程数 -->
+		<property name="maxPoolSize" value="300" />
+		<!-- 队列最大长度 >=mainExecutor.maxSize -->
+		<property name="queueCapacity" value="10000" />
+		<!-- 线程池维护线程所允许的空闲时间 -->
+		<property name="keepAliveSeconds" value="300" />
+		<!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+		<property name="rejectedExecutionHandler">
+			<bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+		</property>
+	</bean>
+
+	<!-- 初始化调度任务的线程池 -->
+	<bean id="initExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- 核心线程数 -->
+		<property name="corePoolSize" value="1" />
+		<!-- 最大线程数 -->
+		<property name="maxPoolSize" value="3" />
+		<!-- 队列最大长度 >=mainExecutor.maxSize -->
+		<property name="queueCapacity" value="10" />
+		<!-- 线程池维护线程所允许的空闲时间 -->
+		<property name="keepAliveSeconds" value="300" />
+		<!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+		<property name="rejectedExecutionHandler">
+			<bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+		</property>
+	</bean>
+
+	<!-- 定时激活任务队列 -->
+	<!-- 这个定时任务不断扫描数据库，并把待发送的信息输入队列 -->
+	<bean id="taskTrigger" class="com.springinaction.schedule.tasktest.TaskTrigger"></bean>
+
+	<!-- 激活任务执行bean -->
+	<bean id="timerExecutor"
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
+		<property name="runnable" ref="taskTrigger" />
+		<!-- 容器加载5秒后开始执行 -->
+		<property name="delay" value="5000" />
+		<!-- 每次任务间隔6秒 -->
+		<property name="period" value="6000" />
+		<!-- 固定间隔,否则默认fixDelay会等到前一个任务完成后才开始计时 -->
+		<property name="fixedRate" value="false" />
+	</bean>
+
+	<!-- 执行激活任务 -->
+	<bean id="timerFactory"
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+		<property name="continueScheduledExecutionAfterException"
+			value="true" />
+		<property name="scheduledExecutorTasks">
+			<list>
+				<ref local="timerExecutor" />
+				<!-- <ref local="cycleExecutor" /> -->
+			</list>
+		</property>
+	</bean>
+
+	<!-- 初始化体调度任务 -->
+	<!-- 启动一个不断循环的线程，读出队列信息，执行发送任务 -->
+	<bean id="taskQueueInit" class="com.springinaction.schedule.tasktest.TaskQueueInit"
+		init-method="queueInit"></bean>
+</beans>
