@@ -51,7 +51,7 @@ public class OneManBand implements Performer
 	
 	public static void main(String args[])
 	{
-		ApplicationContext ctx = new ClassPathXmlApplicationContext("com/springinaction/springidol/spring.xml");
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("com/springinaction/springidol/beanconfig/bean-spring.xml");
 		Performer performer = (Performer) ctx.getBean("hank");
 		performer.perform();
 	}

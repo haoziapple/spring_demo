@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+	default-autowire="byName" default-init-method="bean-init-method"
+	default-destroy-method="bean-destroy-method">
+	<!-- default-autowire设置自动绑定 -->
+	<!-- default-init-method,default-destroy-method设置bean默认的初始化和销毁方法 -->
+
+	<!-- 告诉Spring我们打算使用基于注解的自动装配 -->
+	<context:annotation-config />
+	<!-- 开启自动检测Bean -->
+	<context:component-scan base-package="com/springinaction/springidol" />
+	<!-- Bean declarations go here -->
+
+	<!-- scope:配置用户Bean的作用域 -->
+	<!-- singleton 在每一个Spring容器中，一个Bean定义只有一个对象实例（默认） -->
+	<!-- prototype 允许Bean的定义可以被实例化任意次（每次调用都创建一个实例） -->
+	<!-- request 一次HTTP请求中，每个Bean定义对应一个实例，作用域仅在基于Web的Spring上下文中才有效 -->
+	<!-- session 一个HTTP session中，每个Bean定义对应一个实例 -->
+	<!-- global-session 一个全局HTTP session中，每个Bean定义对应一个实例，该作用域仅在Portlet上下文中才有效 -->
+	<bean id="duke" class="com.springinaction.springidol.performer.Juggler"
+		scope="singleton">
+		<constructor-arg value="15" />
+	</bean>
+
+	<bean id="sonnet29" class="com.springinaction.springidol.performer.Sonnet29">
+	</bean>
+
+	<bean id="poeticDuke" class="com.springinaction.springidol.performer.PoeticJuggler">
+		<constructor-arg value="15" />
+		<constructor-arg ref="sonnet29" />
+	</bean>
+
+	<!-- 使用工厂方法创建单例bean -->
+	<bean id="theStage" class="com.springinaction.springidol.performer.Stage"
+		factory-method="getInstance" />
+
+	<!-- 使用简化的bean属性配置 -->
+	<bean id="kenny" class="com.springinaction.springidol.performer.Instrumentalist"
+		p:song="Jingle bells" />
+
+	<!-- 属性装配list，使用set也可以，但每个成员必须唯一 -->
+	<bean id="hank" class="com.springinaction.springidol.performer.OneManBand">
+		<property name="instruments">
+			<list>
+				<ref bean="saxophone" />
+				<ref bean="piano" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 属性装配Map -->
+	<bean id="jason" class="com.springinaction.springidol.beanconfig.OneManBand">
+		<property name="instruments">
+			<map>
+				<entry key="SAXOPHONE" value-ref="saxophone" />
+				<entry key="PIANO" value-ref="piano" />
+				<entry key="PIANO2" value-ref="instrument" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- 属性装配Map -->
+	<bean id="jerry" class="com.springinaction.springidol.beanconfig.BandWithProp">
+		<property name="instruments">
+			<props>
+				<prop key="GUITAR">STRUM STRUM STRUM</prop>
+				<prop key="CYMBAL">STRUM STRUM STRUM</prop>
+				<prop key="HARMONICA">HUM HUM HUM</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 使用SpEL表达式 -->
+	<bean id="carl" class="com.springinaction.springidol.performer.Instrumentalist">
+		<property name="song" value="#{kenny.song}" />
+	</bean>
+
+	<!-- 乐器bean -->
+	<bean id="saxophone" class="com.springinaction.springidol.instrument.Saxophone" />
+	<bean id="piano" class="com.springinaction.springidol.instrument.Piano" />
+	<!-- 用于byName的自动装配 -->
+	<bean id="instrument" class="com.springinaction.springidol.instrument.Piano" />
+
+</beans>
+
+
+
+
