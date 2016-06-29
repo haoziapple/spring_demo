@@ -16,8 +16,22 @@
 
 	<!-- 告诉Spring我们打算使用基于注解的自动装配 -->
 	<context:annotation-config />
+
+	<!-- 自动检测其实包含了自动装配的功能，更多的，可以不使用<bean>元素 -->
+
 	<!-- 开启自动检测Bean -->
-	<context:component-scan base-package="com/springinaction/springidol" />
+	<!-- annotation, assignable, aspectj, custom, regex -->
+	<context:component-scan base-package="com/springinaction/springidol">
+		<context:include-filter type="assignable"
+			expression="com.springinaction.springidol.inter.Instrument" />
+		<context:exclude-filter type="annotation"
+			expression="" />
+	</context:component-scan>
+
+	<!-- 默认情况下，查找使用构造器(stereotype)注解所标注的类: -->
+	<!-- @Componenet @Controller @Repository @Service -->
+
+
 	<!-- Bean declarations go here -->
 
 	<!-- scope:配置用户Bean的作用域 -->

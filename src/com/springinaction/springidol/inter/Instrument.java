@@ -16,6 +16,14 @@
  *
  */
 package com.springinaction.springidol.inter;
+
+/**
+ * @className:com.springinaction.springidol.inter.Instrument
+ * @description:乐器接口类
+ * @version:v1.0.0
+ * @date:2016-6-29 下午4:32:50
+ * @author:WangHao
+ */
 public interface Instrument
 {
 	public void play();

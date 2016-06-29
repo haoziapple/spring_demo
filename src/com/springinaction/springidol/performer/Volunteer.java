@@ -25,8 +25,8 @@ import com.springinaction.springidol.inter.Thinker;
 
 /**
  * @className:com.springinaction.springidol.performer.Volunteer
- * @description:TODO
- * @version:v1.0.0 
+ * @description:为通知传递参数，MindReader可以获取到Thinker的方法参数
+ * @version:v1.0.0
  * @date:2016-4-28 下午6:48:56
  * @author:WangHao
  */
@@ -50,8 +50,9 @@ public class Volunteer implements Thinker
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("com/springinaction/springidol/spring.xml");
 		Thinker thinker = (Thinker) ctx.getBean("haozi");
 		MindReader magician = (MindReader) ctx.getBean("magician");
-		
+
 		thinker.thinkOfSomething("I need a doctor");
+		thinker.thinkOfSomething("I need a doctor again");
 		System.out.println(magician.getThoughts());
 	}
 }
