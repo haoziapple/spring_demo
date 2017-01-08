@@ -35,6 +35,11 @@ public class QuartzTaskJob
 	{
 		System.out.println(new Date() + "My scheduled job is running");
 	}
+	
+	public void run2()
+	{
+		System.out.println(new Date() + "My scheduled job2 is running");
+	}
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args)

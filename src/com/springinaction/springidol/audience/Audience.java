@@ -27,7 +27,7 @@ import org.aspectj.lang.annotation.Pointcut;
 
 /**
  * @className:com.springinaction.springidol.audience.Audience
- * @description:TODO
+ * @description:使用注解方式的AOP编程
  * @version:v1.0.0
  * @date:2016-4-28 下午4:25:18
  * @author:WangHao

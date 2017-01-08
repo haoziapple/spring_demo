@@ -18,17 +18,17 @@
 package com.springinaction.springidol.performer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.springinaction.springidol.inter.Contestant;
 import com.springinaction.springidol.inter.Instrument;
 import com.springinaction.springidol.inter.Performer;
 
 /**
  * @className:com.springinaction.springidol.performer.Instrumentalist
- * @description:TODO
- * @version:v1.0.0 
+ * @description:测试Spring bean的装配
+ * @version:v1.0.0
  * @date:2016-4-29 上午10:33:00
  * @author:WangHao
  */
@@ -58,7 +58,12 @@ public class Instrumentalist implements Performer
 		return song;
 	}
 
+	/**
+	 * @Autowired 使用自动装配注解时不需要get set方法
+	 * @Qualifier 
+	 */
 	@Autowired
+	@Qualifier("saxophone")
 	private Instrument instrument;
 
 	public String getSong()
@@ -73,13 +78,13 @@ public class Instrumentalist implements Performer
 
 	public static void main(String args[])
 	{
-		ApplicationContext ctx = new ClassPathXmlApplicationContext("com/springinaction/springidol/spring.xml");
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+				"com/springinaction/springidol/beanconfig/bean-spring.xml");
 		Performer performer = (Performer) ctx.getBean("carl");
-//		performer.perform();
-		
-		
-		//通过切面引入新功能
-		Contestant contestant = (Contestant) performer;
-		contestant.receiverAward();
+		performer.perform();
+
+		// 通过切面引入新功能
+		// Contestant contestant = (Contestant) performer;
+		// contestant.receiverAward();
 	}
 }

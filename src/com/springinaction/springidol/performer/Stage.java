@@ -16,17 +16,42 @@
  *
  */
 package com.springinaction.springidol.performer;
+
+/**
+ * @className:com.springinaction.springidol.performer.Stage
+ * @description:Stage单例类
+ * @version:v1.0.0
+ * @date:2016-6-28 下午1:45:24
+ * @author:WangHao
+ */
 public class Stage
 {
-	private Stage() {
-		
+	private Stage()
+	{
+
 	}
-	
-	private static class StageSingletonHolder {
+
+	/**
+	 * @className:com.springinaction.springidol.performer.StageSingletonHolder
+	 * @description:延迟加载实例
+	 * @version:v1.0.0
+	 * @date:2016-6-28 下午1:46:43
+	 * @author:WangHao
+	 */
+	private static class StageSingletonHolder
+	{
 		static Stage instance = new Stage();
 	}
-	
-	public static Stage getInstance() {
+
+	/**
+	 * @Description:返回实例
+	 * @return
+	 * @version:v1.0
+	 * @author:WangHao
+	 * @date:2016-6-28 下午1:47:06
+	 */
+	public static Stage getInstance()
+	{
 		return StageSingletonHolder.instance;
 	}
 

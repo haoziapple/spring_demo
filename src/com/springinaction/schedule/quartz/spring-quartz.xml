@@ -27,20 +27,41 @@
 	<!-- Scheduler配置 -->
 	<!-- startupDelay 延时启动，应用启动后 QuartzScheduler 再启动 , 单位秒 -->
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="triggers" ref="testTrigger" />
+		<property name="triggers">
+			<list>
+				<ref bean="testTrigger"/>
+				<ref bean="testTrigger2"/>
+			</list>
+		</property>
 		<property name="autoStartup" value="true" />
 		<property name="startupDelay" value="10" />
 	</bean>
+
+	<!-- 设置第二个SchedulerFactoryBean，也可以在一个中设置trigger list -->
+	<!-- <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+	<!-- <property name="triggers" ref="testTrigger2" /> -->
+	<!-- <property name="autoStartup" value="true" /> -->
+	<!-- <property name="startupDelay" value="5" /> -->
+	<!-- </bean> -->
 
 	<!-- Trigger配置 -->
 	<bean id="testTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="testJobDetail" />
 		<!-- 每隔1秒钟触发一次 -->
-		<!-- <property name="cronExpression" value="*/1 * * * * ?" /> -->
+		<property name="cronExpression" value="*/1 * * * * ?" />
 
 		<!-- 在某个时间点启动 -->
-		<property name="cronExpression" value="32/1 54 15 * * ?" />
+		<!-- <property name="cronExpression" value="32/1 54 15 * * ?" /> -->
+	</bean>
+	<bean id="testTrigger2"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="testJobDetail2" />
+		<!-- 每隔1秒钟触发一次 -->
+		<property name="cronExpression" value="*/1 * * * * ?" />
+
+		<!-- 在某个时间点启动 -->
+		<!-- <property name="cronExpression" value="32/1 54 15 * * ?" /> -->
 	</bean>
 
 	<!-- JobDetail配置,声明Quartz的job -->
@@ -50,6 +71,13 @@
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="taskJob" />
 		<property name="targetMethod" value="run" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="testJobDetail2"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="taskJob" />
+		<property name="targetMethod" value="run2" />
 		<property name="concurrent" value="false" />
 	</bean>
 
